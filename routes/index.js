@@ -34,6 +34,7 @@ router.get('/book/:id', (req, res, next) => {
   if (!/^[0-9a-fA-F]{24}$/.test(bookId)) { 
     return res.status(404).render('not-found');
   }
+  //Book.findById(bookId).then(book=> console.log("Book before author population:",book))
   Book.findOne({'_id': bookId})
     .populate('author')
     .then(book => {
@@ -60,6 +61,15 @@ router.post("/books/add", (req, res, next) => {
     .catch(error => {
       console.log(error);
     });
+});
+router.get('/books/edit', (req, res, next) => {
+  Book.findOne({_id: req.query.book_id})
+  .then((book) => {
+    res.render("book-edit", {book});
+  })
+  .catch((error) => {
+    console.log(error);
+  })
 });
 router.post("/books/edit", (req, res, next) => {
   const { title, author, description, rating } = req.body;
