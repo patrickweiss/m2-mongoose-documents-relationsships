@@ -134,18 +134,13 @@ const createAuthors = books.map(book => {
   const newAuthor = new Author(book.author)
   return newAuthor.save()
     .then(author => {
-      console.log("Author", author.name);
-      //return author.name;
+      console.log("Author", author.name, author._id);
     })
     .catch(error => {
       throw new Error(`Impossible to add the author. ${error}`)
     })
 })
-
-
-
-
-let ifauthorsFoundPromise = Promise.all(createAuthors)
+let ifAuthorsFoundPromise = Promise.all(createAuthors)
   .then(authors => {
     return books.map(book => {
       return Author.findOne({ name: book.author.name, lastName: book.author.lastName })
@@ -162,9 +157,7 @@ let ifauthorsFoundPromise = Promise.all(createAuthors)
   .catch(error => {
     throw new Error(error)
   })
-
-
-  ifauthorsFoundPromise.then(bookWithReferencePromises => {
+  ifAuthorsFoundPromise.then(bookWithReferencePromises => {
   return Promise.all(bookWithReferencePromises)
     .then(books => {
       return books.map(book => {
